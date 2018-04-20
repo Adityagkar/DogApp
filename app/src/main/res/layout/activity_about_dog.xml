@@ -11,7 +11,7 @@ tools:context="com.gitsteintechnologies.domigo.AboutDog">
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/signupback"
+        android:background="@drawable/backfinal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -89,7 +89,7 @@ tools:context="com.gitsteintechnologies.domigo.AboutDog">
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/rounded2"
-                android:elevation="20dp"
+                android:elevation="10dp"
                 android:hint="your dog's name"
                 android:imeActionId="6"
                 android:imeActionLabel="@string/action_sign_in_short"
@@ -180,6 +180,16 @@ tools:context="com.gitsteintechnologies.domigo.AboutDog">
             android:maxWidth="130dp"
             android:minHeight="120dp"
             android:minWidth="130dp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignTop="@+id/textView3"
+            android:layout_marginTop="26dp"
+            android:layout_toLeftOf="@+id/circularImageView"
+            android:layout_toStartOf="@+id/circularImageView"
+            android:background="@drawable/circlegray" />
 
     </RelativeLayout>
 

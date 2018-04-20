@@ -1,21 +1,63 @@
 package com.gitsteintechnologies.domigo;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class AboutDog extends AppCompatActivity {
+
+    TextView number;
+    Button nextbtn;
+    Integer times;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
         setContentView(R.layout.activity_about_dog);
         getSupportActionBar().hide();
+
+        number=findViewById(R.id.textView4);
+        nextbtn = findViewById(R.id.nextbtn);
+
+        times=getIntent().getIntExtra("No_Dogs",0);
+        times--;
+        Log.d("TEST",times+"");
+
+
+        nextbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(times!=0){
+                    Intent intent=new Intent(AboutDog.this,AboutDog.class);
+                                    Log.d("TEST",times+" running");
+                    intent.putExtra("No_Dogs",times);
+
+                    //code for uploading to database will come here
+                    startActivity(intent);
+                }
+
+                if(times==0){
+                    Intent intent2=new Intent(AboutDog.this,DomigoBookingConfirm.class);
+                    startActivity(intent2);
+                }
+
+
+
+            }
+        });
+
+
     }
 }
