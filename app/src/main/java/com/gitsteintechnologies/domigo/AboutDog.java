@@ -8,15 +8,27 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
 public class AboutDog extends AppCompatActivity {
 
-    TextView number;
+
     Button nextbtn;
     Integer times;
+    EditText name;
+    EditText breed;
+    EditText age;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+    String CID_retrieved;// this CID will be retrieved from firebase
+    UserInfoDatabase userInfoDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +40,16 @@ public class AboutDog extends AppCompatActivity {
         setContentView(R.layout.activity_about_dog);
         getSupportActionBar().hide();
 
-        number=findViewById(R.id.textView4);
+
         nextbtn = findViewById(R.id.nextbtn);
+        name=findViewById(R.id.name);
+        breed=findViewById(R.id.breed);
+        age=findViewById(R.id.age);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+
+
 
         times=getIntent().getIntExtra("No_Dogs",0);
         times--;
@@ -44,7 +64,12 @@ public class AboutDog extends AppCompatActivity {
                                     Log.d("TEST",times+" running");
                     intent.putExtra("No_Dogs",times);
 
-                    //code for uploading to database will come here
+                    //CID_retrieved=databaseReference.child("signup_details").orderByChild("username").equalTo("");
+                    CID_retrieved= userInfoDatabase.getUserID();
+                    DogInfoDatabase a = new DogInfoDatabase(name.getText().toString(), breed.getText().toString(),age.getText().toString(),CID_retrieved);
+                    databaseReference.child("dog_details").push().setValue(a);
+
+                    //code for uploading to database will come her
                     startActivity(intent);
                 }
 
@@ -57,6 +82,7 @@ public class AboutDog extends AppCompatActivity {
 
             }
         });
+
 
 
     }

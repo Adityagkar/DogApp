@@ -9,25 +9,31 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:screenOrientation="portrait">
-        <activity android:name=".SplashScreen"></activity>
+        android:theme="@style/AppTheme">
+        <activity android:name=".SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="stateVisible|adjustPan"></activity>
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".SignUp"
-            android:windowSoftInputMode="stateVisible|adjustPan">
-
-        </activity>
+            android:windowSoftInputMode="stateVisible|adjustPan" />
 
         <meta-data
             android:name="preloaded_fonts"
@@ -35,15 +41,15 @@
 
         <activity
             android:name=".AboutDog"
-            android:windowSoftInputMode="stateVisible|adjustPan"></activity>
-        <activity android:name=".DomigoBookingConfirm"></activity>
-        <activity android:name=".DogNumberActivity">
+            android:windowSoftInputMode="stateVisible|adjustPan" />
+        <activity android:name=".DomigoBookingConfirm" />
+        <activity android:name=".DogNumberActivity" />
+        <activity android:name=".BookingPlans">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        </activity>
+        <activity android:name=".SmallBreed">
+
         </activity>
     </application>
 

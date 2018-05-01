@@ -13,11 +13,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -28,8 +31,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 import java.net.URI;
@@ -47,9 +55,14 @@ public class SignUp extends AppCompatActivity implements LocationListener {
     Uri uri;
     Location location;
     TextView locationview;
-
+    String mylocation;
+    UserInfoDatabase userInfoDatabase;
     LocationManager locationManager;
         String provider;
+        String userid_retrieved;
+        EditText locationedit;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +75,11 @@ public class SignUp extends AppCompatActivity implements LocationListener {
         setContentView(R.layout.activity_sign_up);
         getSupportActionBar().hide();
 
+
+
         //https://github.com/lopspower/CircularImageView used this
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
+        databaseReference = firebaseDatabase.getReference("signup_details");
 
 
         name = findViewById(R.id.name);
@@ -76,6 +91,7 @@ public class SignUp extends AppCompatActivity implements LocationListener {
         imageView = findViewById(R.id.circularImageView);
         locationbtn = findViewById(R.id.button5);
         locationview = findViewById(R.id.locationview);
+        locationedit = findViewById(R.id.location);
 
 
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
@@ -85,13 +101,21 @@ public class SignUp extends AppCompatActivity implements LocationListener {
 
 
         //submit values to DB on click of submit button
-        next_btn.setVisibility(View.INVISIBLE);
+        next_btn.setVisibility(View.VISIBLE);
 
         next_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddToDatabase a = new AddToDatabase(name.getText().toString(), username.getText().toString(), pwd.getText().toString(), mobile.getText().toString());
-                databaseReference.child("doginfo").push().setValue(a);
+
+
+                AddToDatabase a = new AddToDatabase(name.getText().toString(), username.getText().toString(), pwd.getText().toString(), mobile.getText().toString(),mylocation);
+                userid_retrieved=databaseReference.child("signup_details").push().getKey();
+                databaseReference.child(userid_retrieved).setValue(a);
+                Intent intent=new Intent(SignUp.this,DogNumberActivity.class);
+                Log.d("KEYFINAL",userid_retrieved);
+
+                userInfoDatabase=new UserInfoDatabase(name.getText().toString(),userid_retrieved);
+                startActivity(intent);
             }
         });
 
@@ -106,8 +130,15 @@ public class SignUp extends AppCompatActivity implements LocationListener {
             }
         });
 
+        locationedit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                next_btn.setVisibility(View.VISIBLE);
+            }
+        });
 
-        locationbtn.setOnClickListener(new View.OnClickListener() {
+
+        locationview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkLocationPermission();
@@ -129,23 +160,24 @@ public class SignUp extends AppCompatActivity implements LocationListener {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.DONUT)
     @Override
     public void onLocationChanged(Location location) {
 
         double lat = location.getLatitude();
         double lo = location.getLongitude();
-
+        Toast.makeText(getApplicationContext(),"TESTING in onlocatioinchanged !",Toast.LENGTH_LONG).show();
 //        LatLng lan = new LatLng(lat,lo);
 
         Geocoder geo = new Geocoder(this, Locale.getDefault());
         try {
             List<Address> al = geo.getFromLocation(lat, lo, 1);
             Address address = al.get(0);
-            String mylocation = address.getSubLocality();
+            mylocation = address.getSubLocality();
 
-            locationview.setVisibility(View.VISIBLE);
-
-            locationview.setText(mylocation);
+            //locationview.setVisibility(View.VISIBLE);
+            Toast.makeText(getApplicationContext(),"TESTING in onlocatioinchanged !",Toast.LENGTH_LONG).show();
+            locationedit.setText(mylocation);
             next_btn.setVisibility(View.VISIBLE);
             // Toast.makeText(this,mylocation,Toast.LENGTH_LONG).show();
         } catch (IOException e) {
@@ -246,14 +278,17 @@ public class SignUp extends AppCompatActivity implements LocationListener {
         public String Username;
         public String Password;
         public String mobile;
+        public String location;
+
         //public String imageEntry;
 
 
-        public AddToDatabase(String Name, String Username, String Password, String mobile) {
+        public AddToDatabase(String Name, String Username, String Password, String mobile,String Location) {
             this.Name = Name;
             this.Username = Username;
             this.Password = Password;
             this.mobile = mobile;
+            this.location =Location;
 
         }
 

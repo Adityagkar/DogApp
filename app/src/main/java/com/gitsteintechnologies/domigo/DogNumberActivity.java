@@ -14,7 +14,7 @@ public class DogNumberActivity extends AppCompatActivity {
 
     Integer no_dogs;
     Button submit_btn;
-
+    UserInfoDatabase userInfoDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,7 @@ public class DogNumberActivity extends AppCompatActivity {
 
 
         np.setOnValueChangedListener(onValueChangeListener);
+
 
         submit_btn.setOnClickListener(new View.OnClickListener() {
             @Override

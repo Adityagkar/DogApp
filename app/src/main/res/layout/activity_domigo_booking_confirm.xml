@@ -11,7 +11,7 @@ tools:context="com.gitsteintechnologies.domigo.DomigoBookingConfirm">
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bookingback2"
+        android:background="@drawable/backwithoutshadowtri"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -78,7 +78,7 @@ tools:context="com.gitsteintechnologies.domigo.DomigoBookingConfirm">
                 android:background="@drawable/rounded"
                 android:shadowColor="@android:color/background_dark"
                 android:shadowRadius="30"
-                android:text="Book Later"
+                android:text="Track Dog"
                 android:textColor="@android:color/background_light"
                 android:textSize="18sp" />
 

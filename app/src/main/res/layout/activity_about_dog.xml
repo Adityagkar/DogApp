@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="#06567e"
-tools:context="com.gitsteintechnologies.domigo.AboutDog">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#06567e"
+    tools:context="com.gitsteintechnologies.domigo.AboutDog">
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="match_parent"
+        android:layout_width="395dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/backfinal"
+        android:background="@drawable/backwithoutshadowtri"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
@@ -102,7 +101,7 @@ tools:context="com.gitsteintechnologies.domigo.AboutDog">
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/username"
+                android:id="@+id/breed"
                 style="@style/Widget.AppCompat.EditText"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -123,7 +122,7 @@ tools:context="com.gitsteintechnologies.domigo.AboutDog">
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/email"
+                android:id="@+id/age"
                 style="@style/Widget.AppCompat.EditText"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -143,26 +142,6 @@ tools:context="com.gitsteintechnologies.domigo.AboutDog">
                 android:textColorLink="@android:color/background_dark"
                 android:textSize="18sp" />
 
-            <EditText
-                android:id="@+id/mobile"
-                style="@style/Widget.AppCompat.EditText"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/rounded2"
-                android:elevation="20dp"
-                android:hint=" about my dog"
-                android:imeActionId="6"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionUnspecified"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textAlignment="center"
-                android:textColor="@color/colorPrimaryDark"
-                android:textColorLink="@android:color/background_dark"
-                android:textSize="18sp" />
         </LinearLayout>
 
         <Button
@@ -180,16 +159,6 @@ tools:context="com.gitsteintechnologies.domigo.AboutDog">
             android:maxWidth="130dp"
             android:minHeight="120dp"
             android:minWidth="130dp" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_alignTop="@+id/textView3"
-            android:layout_marginTop="26dp"
-            android:layout_toLeftOf="@+id/circularImageView"
-            android:layout_toStartOf="@+id/circularImageView"
-            android:background="@drawable/circlegray" />
 
     </RelativeLayout>
 

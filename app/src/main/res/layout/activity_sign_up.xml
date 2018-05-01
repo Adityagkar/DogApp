@@ -11,7 +11,7 @@
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/backfinal"
+        android:background="@drawable/backwithoutshadowtri"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -166,6 +166,27 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorLink="@android:color/background_dark"
                 android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/location"
+                style="@style/Widget.AppCompat.EditText"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rounded2"
+                android:elevation="20dp"
+                android:hint="location"
+                android:imeActionId="6"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionUnspecified"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorLink="@android:color/background_dark"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <Button
@@ -184,14 +205,17 @@
 
         <Button
             android:id="@+id/button5"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignTop="@+id/locationview"
-            android:layout_marginTop="20dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginTop="22dp"
             android:layout_toLeftOf="@+id/camera_btn"
             android:layout_toStartOf="@+id/camera_btn"
             android:background="@drawable/elllipse1"
-            android:elevation="16dp" />
+            android:elevation="16dp"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/locationview"
