@@ -2,6 +2,8 @@ package com.gitsteintechnologies.domigo;
 
 import android.*;
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +16,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -24,20 +27,26 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.net.URI;
@@ -45,22 +54,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class SignUp extends AppCompatActivity implements LocationListener {
+public class SignUp extends AppCompatActivity  {
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     EditText name, pwd, username, mobile;
-    Button camButton, next_btn, locationbtn;
+    Button camButton, next_btn;
     ImageView imageView;
     Uri uri;
-    Location location;
-    TextView locationview;
+
     String mylocation;
     UserInfoDatabase userInfoDatabase;
-    LocationManager locationManager;
-        String provider;
-        String userid_retrieved;
-        EditText locationedit;
+
+
+    String userid_retrieved;
+    String Storage_Path = "";
+
+    StorageReference storageReference;
+
+    ProgressDialog progressDialog ;
 
 
 
@@ -80,7 +92,9 @@ public class SignUp extends AppCompatActivity implements LocationListener {
         //https://github.com/lopspower/CircularImageView used this
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("signup_details");
+        storageReference = FirebaseStorage.getInstance().getReference();
 
+        progressDialog=new ProgressDialog(SignUp.this);
 
         name = findViewById(R.id.name);
         username = findViewById(R.id.username);
@@ -89,13 +103,6 @@ public class SignUp extends AppCompatActivity implements LocationListener {
         camButton = findViewById(R.id.camera_btn);
         next_btn = findViewById(R.id.nextbtn);
         imageView = findViewById(R.id.circularImageView);
-        locationbtn = findViewById(R.id.button5);
-        locationview = findViewById(R.id.locationview);
-        locationedit = findViewById(R.id.location);
-
-
-        locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        provider = locationManager.getBestProvider(new Criteria(), false);
 
 
 
@@ -107,50 +114,29 @@ public class SignUp extends AppCompatActivity implements LocationListener {
             @Override
             public void onClick(View view) {
 
-
-                AddToDatabase a = new AddToDatabase(name.getText().toString(), username.getText().toString(), pwd.getText().toString(), mobile.getText().toString(),mylocation);
                 userid_retrieved=databaseReference.child("signup_details").push().getKey();
-                databaseReference.child(userid_retrieved).setValue(a);
-                Intent intent=new Intent(SignUp.this,DogNumberActivity.class);
-                Log.d("KEYFINAL",userid_retrieved);
+                //databaseReference.child(userid_retrieved).setValue(a);
 
-                userInfoDatabase=new UserInfoDatabase(name.getText().toString(),userid_retrieved);
-                startActivity(intent);
+                Log.d("KEYFINAL",userid_retrieved);
+                onImageUploadToFirebase();
+
             }
         });
 
         camButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_PICK);
-                startActivityForResult(intent, 1);
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_PICK);
 
-            }
-        });
+            startActivityForResult(intent, 1);
 
-        locationedit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                next_btn.setVisibility(View.VISIBLE);
-            }
-        });
+        }
+    });
 
 
-        locationview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkLocationPermission();
-                Toast.makeText(getApplicationContext(),"Please wait Retrieving Location !",Toast.LENGTH_LONG).show();
-                locationbtn.setVisibility(View.INVISIBLE);
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, SignUp.this);
-
-            }
-        });
-
-
-    }
+}
 
 
     protected void onActivityResult(int ResultCode, int RequestCode, Intent data) {
@@ -161,110 +147,92 @@ public class SignUp extends AppCompatActivity implements LocationListener {
 
 
     @RequiresApi(api = Build.VERSION_CODES.DONUT)
-    @Override
-    public void onLocationChanged(Location location) {
 
-        double lat = location.getLatitude();
-        double lo = location.getLongitude();
-        Toast.makeText(getApplicationContext(),"TESTING in onlocatioinchanged !",Toast.LENGTH_LONG).show();
-//        LatLng lan = new LatLng(lat,lo);
 
-        Geocoder geo = new Geocoder(this, Locale.getDefault());
-        try {
-            List<Address> al = geo.getFromLocation(lat, lo, 1);
-            Address address = al.get(0);
-            mylocation = address.getSubLocality();
+    public void onImageUploadToFirebase(){
 
-            //locationview.setVisibility(View.VISIBLE);
-            Toast.makeText(getApplicationContext(),"TESTING in onlocatioinchanged !",Toast.LENGTH_LONG).show();
-            locationedit.setText(mylocation);
-            next_btn.setVisibility(View.VISIBLE);
-            // Toast.makeText(this,mylocation,Toast.LENGTH_LONG).show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(uri!=null){
+            Toast.makeText(this,uri+"",Toast.LENGTH_SHORT).show();
+
+            StorageReference storageReference2nd = storageReference.child("upload/" + System.currentTimeMillis() + "." + GetFileExtension(uri));
+
+            storageReference2nd.putFile(uri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            // Getting image name from EditText and store into string variable.
+                            String TempImageName = username.getText().toString()+"."+ GetFileExtension(uri);
+
+                            progressDialog.setTitle("Image is Uploading...");
+
+                            // Showing progressDialog.
+                            progressDialog.show();
+
+//String Username, String Name, String Password, String mobile, String Location, String imagename, String url
+                            @SuppressWarnings("VisibleForTests")
+                            ImageUploadInfo imageUploadInfo = new ImageUploadInfo(username.getText().toString(),name.getText().toString(),pwd.getText().toString(),mobile.getText().toString()
+                            ,TempImageName,taskSnapshot.getDownloadUrl().toString());
+
+                //code for username checking
+                            String username_temp=username.getText().toString();
+                            Query queryref=databaseReference.child("signup_details").orderByChild("username").equalTo(username_temp);
+                           if(queryref!=null){
+
+                           }
+
+
+
+
+                             //Adding image upload id s child element into databaseReference.
+                            databaseReference.child(userid_retrieved).setValue(imageUploadInfo);
+                        }
+                    })// If something goes wrong .
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+
+                            // Hiding the progressDialog.
+                            progressDialog.dismiss();
+
+                            // Showing exception erro message.
+                            Toast.makeText(SignUp.this, exception.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    })
+
+                    // On progress change upload time.
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
+                            // Setting progressDialog Title.
+                            progressDialog.setTitle("Image is Uploading...");
+
+                        }
+                    });
+
+            Intent intent=new Intent(SignUp.this,DogNumberActivity.class);
+            userInfoDatabase=new UserInfoDatabase(name.getText().toString(),userid_retrieved);
+            startActivity(intent);
+
+        }
+        else {
+
+            Toast.makeText(SignUp.this, "Please Select an Image !", Toast.LENGTH_LONG).show();
+
         }
 
 
     }
+    public String GetFileExtension(Uri uri) {
 
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
+        ContentResolver contentResolver = getContentResolver();
 
-    }
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
 
-    @Override
-    public void onProviderEnabled(String s) {
+        // Returning the file Extension.
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri)) ;
 
-        Toast.makeText(this, "gps on", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
-    }
-
-
-    public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(SignUp.this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-//            Toast.makeText(this,"callll",Toast.LENGTH_SHORT).show();
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(SignUp.this,
-                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                        100);
-                            }
-
-
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        100);
-            }
-            return false;
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 99: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-
-                        //Request location updates:
-                        locationManager.requestLocationUpdates(provider, 1, 1, this);
-                    }
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-
-                }
-                return;
-            }
-
-        }
     }
 }
 
@@ -273,25 +241,6 @@ public class SignUp extends AppCompatActivity implements LocationListener {
 
 
 
-    class AddToDatabase {
-        public String Name;
-        public String Username;
-        public String Password;
-        public String mobile;
-        public String location;
 
-        //public String imageEntry;
-
-
-        public AddToDatabase(String Name, String Username, String Password, String mobile,String Location) {
-            this.Name = Name;
-            this.Username = Username;
-            this.Password = Password;
-            this.mobile = mobile;
-            this.location =Location;
-
-        }
-
-    }
 
 

@@ -3,6 +3,7 @@ package com.gitsteintechnologies.domigo;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -30,7 +31,7 @@ public class DogNumberActivity extends AppCompatActivity {
 
         NumberPicker np = findViewById(R.id.numberPicker);
 
-        np.setMinValue(1);
+        np.setMinValue(0);
         np.setMaxValue(15);
 
 
@@ -42,7 +43,11 @@ public class DogNumberActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent=new Intent(DogNumberActivity.this,AboutDog.class);
                 intent.putExtra("No_Dogs",no_dogs);
+                Log.d("TEST",no_dogs+"");
+                if(no_dogs!=0)
                 startActivity(intent);
+                else
+                    Toast.makeText(DogNumberActivity.this,"Sorry ! You need to have a dog to enjoy our services",Toast.LENGTH_LONG).show();
             }
         });
     }
