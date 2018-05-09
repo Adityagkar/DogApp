@@ -59,6 +59,14 @@ public class PlacePickerActivity extends AppCompatActivity{
             }
         });
 
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(PlacePickerActivity.this,DogNumberActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
 
 

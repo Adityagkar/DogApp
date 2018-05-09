@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -31,6 +32,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +75,7 @@ public class SignUp extends AppCompatActivity  {
     StorageReference storageReference;
 
     ProgressDialog progressDialog ;
+    RelativeLayout linear;
 
 
 
@@ -86,7 +89,6 @@ public class SignUp extends AppCompatActivity  {
 
         setContentView(R.layout.activity_sign_up);
         getSupportActionBar().hide();
-
 
 
         //https://github.com/lopspower/CircularImageView used this
@@ -103,6 +105,8 @@ public class SignUp extends AppCompatActivity  {
         camButton = findViewById(R.id.camera_btn);
         next_btn = findViewById(R.id.nextbtn);
         imageView = findViewById(R.id.circularImageView);
+
+        linear=findViewById(R.id.linear);
 
 
 
@@ -152,7 +156,7 @@ public class SignUp extends AppCompatActivity  {
     public void onImageUploadToFirebase(){
 
         if(uri!=null){
-            Toast.makeText(this,uri+"",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,uri+"",Toast.LENGTH_SHORT).show();
 
             StorageReference storageReference2nd = storageReference.child("upload/" + System.currentTimeMillis() + "." + GetFileExtension(uri));
 
@@ -211,14 +215,17 @@ public class SignUp extends AppCompatActivity  {
                         }
                     });
 
-            Intent intent=new Intent(SignUp.this,DogNumberActivity.class);
-            userInfoDatabase=new UserInfoDatabase(name.getText().toString(),userid_retrieved);
+            Intent intent=new Intent(SignUp.this,PlacePickerActivity.class);
             startActivity(intent);
+            userInfoDatabase=new UserInfoDatabase(name.getText().toString(),userid_retrieved);
+
 
         }
         else {
 
-            Toast.makeText(SignUp.this, "Please Select an Image !", Toast.LENGTH_LONG).show();
+            Snackbar snackbar = Snackbar
+                    .make(linear, "Please Upload an image !", Snackbar.LENGTH_LONG);
+            snackbar.show();
 
         }
 

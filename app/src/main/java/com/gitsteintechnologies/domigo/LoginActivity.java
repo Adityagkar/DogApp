@@ -3,10 +3,13 @@ package com.gitsteintechnologies.domigo;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -20,18 +23,32 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -62,18 +79,32 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+    RelativeLayout linear;
+    boolean flag=false;
+    TextView forgotpwd;
+    Button mEmailSignInButton,signup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login3);
-        // Set up the login form.
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+
+        setContentView(R.layout.activity_login_new);
+        getSupportActionBar().hide();
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-
-        populateAutoComplete();
-
-
+        linear=findViewById(R.id.linear);
         mPasswordView = (EditText) findViewById(R.id.password);
+        populateAutoComplete();
+        forgotpwd=findViewById(R.id.forgot);
+
+        firebaseDatabase=FirebaseDatabase.getInstance();
+        databaseReference=firebaseDatabase.getReference();
+
+
+
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -85,19 +116,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_btn);
+       mEmailSignInButton = (Button) findViewById(R.id.email_btn);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 attemptLogin();
+
                 // login code
 
 
             }
         });
 
-        Button signup=findViewById(R.id.button3);
+        forgotpwd.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              onForgotPassword(forgotpwd);
+            }
+        });
+
+
+        signup=findViewById(R.id.button3);
 
         signup.setOnClickListener(new OnClickListener() {
             @Override
@@ -110,6 +150,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
+
+
+
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -173,6 +216,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
+
+        retrieve(email,password);
+
         boolean cancel = false;
         View focusView = null;
 
@@ -181,18 +227,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
+
+
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        }
+
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -350,8 +389,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                finish();
+
+                if(flag==true){
+                    //right credentials of login
+                    Snackbar snackbar = Snackbar
+                            .make(linear, "Login Successfull !", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+                else if(flag==false){
+                    Snackbar snackbar = Snackbar
+                            .make(linear, "Wrong Login Credentials !", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+           // finish();
             } else {
+
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
@@ -362,6 +414,86 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+    public void retrieve(final String username_u, final  String password_u){
+
+//        final String username_u=mEmailView.getText().toString();
+//        final String password_u=mPasswordView.getText().toString();
+       // Log.d("TEST","VAlue found !");
+        Query query= databaseReference.child("signup_details").orderByChild("username").equalTo(username_u);
+
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+                {
+                    //Log.d("TEST!!!!","VAlue found !");
+
+                    Map<String,Object> map= (Map<String, Object>) dataSnapshot1.getValue();
+                    String username_r=map.get("username").toString();
+                    String password_r=map.get("password").toString();
+
+                   // Log.d("TEST",""+username_r+" "+password_r);
+
+                   if(username_r.equals(username_u) && password_r.equals(password_u) )
+                    {
+
+                            Log.d("TEST","VAlue found !");
+                        flag=true;
+                            break;
+
+
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    void onForgotPassword(View view) {
+
+        if (view.getId() == R.id.forgot) {
+
+
+
+
+                    AlertDialog.Builder alertDialogBuilder;
+                    alertDialogBuilder = new AlertDialog.Builder(LoginActivity.this,R.style.AlertDialogStyle);
+
+                    alertDialogBuilder.setTitle("Forgot Password");
+                    alertDialogBuilder.setMessage(" An email would be sent to the email id linked with your Username "+". Are you sure you want to proceed further ?");
+
+                    alertDialogBuilder.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                           Intent intent = new Intent(LoginActivity.this,ForgotActivity.class);
+                           startActivity(intent);
+                        }
+                    });
+
+                    alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+
+                        }
+                    });
+
+                    AlertDialog alert = alertDialogBuilder.create();
+                    alert.show();
+
+
+                }
+
+
+
     }
 }
 
