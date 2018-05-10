@@ -395,6 +395,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     Snackbar snackbar = Snackbar
                             .make(linear, "Login Successfull !", Snackbar.LENGTH_LONG);
                     snackbar.show();
+                    Intent intent = new Intent(LoginActivity.this,NavUser.class);
+                    startActivity(intent);
+
+
                 }
                 else if(flag==false){
                     Snackbar snackbar = Snackbar
@@ -469,7 +473,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     alertDialogBuilder = new AlertDialog.Builder(LoginActivity.this,R.style.AlertDialogStyle);
 
                     alertDialogBuilder.setTitle("Forgot Password");
-                    alertDialogBuilder.setMessage(" An email would be sent to the email id linked with your Username "+". Are you sure you want to proceed further ?");
+                    alertDialogBuilder.setMessage(" An email would be sent to the email id linked with your account "+". Are you sure you want to proceed further ?");
 
                     alertDialogBuilder.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -481,6 +485,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
                             dialogInterface.cancel();
 
                         }

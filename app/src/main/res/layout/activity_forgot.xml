@@ -7,6 +7,7 @@
     tools:context="com.gitsteintechnologies.domigo.ForgotActivity">
 
     <RelativeLayout
+        android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/linearbacktryagain"
@@ -23,7 +24,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="68dp"
             android:fontFamily="@font/acme"
-            android:text="Enter your Username"
+            android:text="Enter your email address"
             android:textAlignment="center"
             android:textColor="@color/cast_expanded_controller_text_color"
             android:textSize="24sp"
@@ -34,12 +35,12 @@
             style="@android:style/Widget.DeviceDefault.Light.AutoCompleteTextView"
             android:layout_width="300dp"
             android:layout_height="40dp"
+            android:layout_alignLeft="@+id/textView18"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="216dp"
+            android:layout_alignStart="@+id/textView18"
+            android:layout_marginTop="215dp"
             android:background="@drawable/rounded"
             android:elevation="20dp"
-            android:hint="  username"
             android:inputType="text"
             android:maxLines="1"
             android:popupBackground="#7acde9"
@@ -50,7 +51,7 @@
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/email_btn2"
+            android:id="@+id/proceedbtn"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/email3"

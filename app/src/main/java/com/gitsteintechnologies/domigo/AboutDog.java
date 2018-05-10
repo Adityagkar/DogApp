@@ -130,7 +130,7 @@ public class AboutDog extends AppCompatActivity {
                 }
 
                 if(times==0){
-                    Intent intent2=new Intent(AboutDog.this,DomigoBookingConfirm.class);
+                    Intent intent2=new Intent(AboutDog.this,CompletedSignUp.class);
 
                     onImageUploadToFirebase(intent2);
 

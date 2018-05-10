@@ -19,17 +19,13 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashScreen" />
+        <activity android:name=".SplashScreen">
+
+        </activity>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="stateVisible|adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:windowSoftInputMode="stateVisible|adjustPan"></activity>
         <activity
             android:name=".SignUp"
             android:windowSoftInputMode="stateVisible|adjustPan" />
@@ -41,10 +37,7 @@
         <activity
             android:name=".AboutDog"
             android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity android:name=".DomigoBookingConfirm"></activity>
         <activity android:name=".DogNumberActivity" />
-        <activity android:name=".BookingPlans" />
-        <activity android:name=".SmallBreed" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -61,7 +54,18 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".PlacePickerActivity" />
-        <activity android:name=".ForgotActivity"></activity>
+        <activity android:name=".ForgotActivity" />
+        <activity
+            android:name=".NavUser"
+            android:label="@string/title_activity_nav_user"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".CompletedSignUp"></activity>
     </application>
 
 </manifest>

@@ -6,21 +6,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class BookingPlans extends AppCompatActivity {
+import java.io.InputStreamReader;
 
-    Button small;
+public class CompletedSignUp extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_booking_plans);
+        setContentView(R.layout.activity_completed_sign_up);
 
-        small = findViewById(R.id.button4);
+        Button proceed_to_login;
 
-        small.setOnClickListener(new View.OnClickListener() {
+        proceed_to_login=findViewById(R.id.proceedbtn2);
+
+        proceed_to_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(BookingPlans.this,SmallBreed.class);
+                Intent intent = new Intent(CompletedSignUp.this,LoginActivity.class);
                 startActivity(intent);
             }
         });
