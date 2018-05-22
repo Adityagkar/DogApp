@@ -68,9 +68,10 @@ public class SignUp extends AppCompatActivity  {
     ImageView imageView;
     Uri uri;
     boolean newflag=true;
+    UserInfoDatabase userInfoDatabase;
 
     String mylocation;
-    UserInfoDatabase userInfoDatabase;
+
 
 
     String userid_retrieved;
@@ -109,10 +110,11 @@ public class SignUp extends AppCompatActivity  {
         camButton = findViewById(R.id.camera_btn);
         next_btn = findViewById(R.id.nextbtn);
         imageView = findViewById(R.id.circularImageView);
+        next_btn=findViewById(R.id.nextbtn);
 
         linear=findViewById(R.id.linear);
 
-
+        userInfoDatabase = new UserInfoDatabase();
 
 
 
@@ -204,7 +206,7 @@ public class SignUp extends AppCompatActivity  {
                             // Hiding the progressDialog.
                             progressDialog.dismiss();
 
-                            // Showing exception erro message.
+                            // Showing exception error message.
                             Toast.makeText(SignUp.this, exception.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     })
@@ -222,12 +224,12 @@ public class SignUp extends AppCompatActivity  {
 
             Intent intent=new Intent(SignUp.this,PlacePickerActivity.class);
 
-            startActivity(intent);
-             userInfoDatabase = new UserInfoDatabase(username.getText().toString(), userid_retrieved);
+           userInfoDatabase = new UserInfoDatabase(username.getText().toString(), userid_retrieved);
+
+             startActivity(intent);
+
         }
         else {
-
-
 
                 Snackbar snackbar = Snackbar
                         .make(linear, "Please Upload an image !", Snackbar.LENGTH_LONG);
@@ -273,7 +275,7 @@ public class SignUp extends AppCompatActivity  {
 
                     if(!flag)
                     {
-                        Snackbar snackbar = Snackbar.make(linear, "This Username is already taken!", Snackbar.LENGTH_LONG);
+                        Snackbar snackbar = Snackbar.make(linear, "This Emaili-d is already Registered!", Snackbar.LENGTH_LONG);
                         snackbar.show();
                     }
                     else

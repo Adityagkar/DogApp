@@ -5,6 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,6 +16,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +30,10 @@ public class PlacePickerActivity extends AppCompatActivity{
     Button button;
     TextView location;
     Button confirm;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+    UserInfoDatabase userInfoDatabase;
+
 
 
     @Override
@@ -33,15 +41,20 @@ public class PlacePickerActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_picker);
 
+
         mClient = new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .build();
 
+        userInfoDatabase= new UserInfoDatabase();
         button=findViewById(R.id.button5);
         location=findViewById(R.id.textView10);
         confirm=findViewById(R.id.button10);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("location_details");
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +76,14 @@ public class PlacePickerActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(PlacePickerActivity.this,DogNumberActivity.class);
+                String locationid=databaseReference.child("location_details").push().getKey();
+
+
+
+                Log.d("TEST2","location set");
+                userInfoDatabase.setLocation(location.getText().toString());
+                databaseReference.child(locationid).setValue(userInfoDatabase);
+
                 startActivity(intent);
             }
         });
@@ -116,8 +137,6 @@ public class PlacePickerActivity extends AppCompatActivity{
                     e.printStackTrace();
                 }
 
-
-
                 stBuilder.append("Name: ");
                 stBuilder.append(placename);
                 stBuilder.append("\n");
@@ -130,6 +149,7 @@ public class PlacePickerActivity extends AppCompatActivity{
                 stBuilder.append("Address: ");
                 stBuilder.append(address);
                 location.setText(stBuilder.toString());
+
 
                 confirm.setVisibility(View.VISIBLE);
             }

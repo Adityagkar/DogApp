@@ -3,4 +3,5 @@
     <color name="colorPrimary">#175797</color>
     <color name="colorPrimaryDark">#041a2f</color>
     <color name="colorAccent">#ffffff</color>
+    <color name="checkcolor">@color/cast_libraries_material_featurehighlight_outer_highlight_default_color</color>
 </resources>

@@ -443,7 +443,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                    if(username_r.equals(username_u) && password_r.equals(password_u) )
                     {
-                        UserInfoDatabase userInfoDatabase=new UserInfoDatabase(username_r,user_id);
+                        UserInfoDatabase userInfoDatabase=new UserInfoDatabase(username_r,user_id,null);
 
                             Log.d("TEST","VAlue found !");
                         flag=true;

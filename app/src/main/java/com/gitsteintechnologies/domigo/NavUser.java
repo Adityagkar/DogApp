@@ -95,6 +95,7 @@ public class NavUser extends AppCompatActivity
         //initializing the fragment object which is selected
         if (id == R.id.nav_home) {
             // Handle the camera action
+            fragment=new Home();
         } else if (id == R.id.nav_booking) {
             fragment=new MenuBooking();
 

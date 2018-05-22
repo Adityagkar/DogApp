@@ -4,11 +4,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -30,17 +34,17 @@ public class DogList extends Fragment  {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     List<String> names;
-    ListView listView;
-//    String namesnew[]={""};
-//    int i;
+    List<String> breed;
+        ListView listView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View v  =inflater.inflate(R.layout.fragment_list,container,false);
+      final View v  =inflater.inflate(R.layout.fragment_list,container,false);
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
 
         names= new ArrayList<String>();
+        breed=new ArrayList<String>();
         listView=  v.findViewById(R.id.listView);
 
 
@@ -48,8 +52,10 @@ public class DogList extends Fragment  {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 Fragment fragment;
-                fragment = new DayChooser2();
+                fragment = new FinalBooking();
                 replaceFragment(fragment);
             }
         });
@@ -77,9 +83,6 @@ public class DogList extends Fragment  {
     }
     public void retrieve(final String username_u){
 
-//        final String username_u=mEmailView.getText().toString();
-//        final String password_u=mPasswordView.getText().toString();
-        // Log.d("TEST","VAlue found !");
         Query query= databaseReference.child("dog_details").orderByChild("username").equalTo(username_u);
 
 //        namesnew[0]="";
@@ -94,15 +97,18 @@ public class DogList extends Fragment  {
 
                     Map<String,Object> map= (Map<String, Object>) dataSnapshot1.getValue();
                     String dogname=map.get("dogname").toString();
-                    String dogid=map.get("did").toString();
-                    String customerid=map.get("cid").toString();
+                    String dogbreed=map.get("dog_breed").toString();
+
                     names.add(dogname);
+                    breed.add(dogbreed);
                     Log.d("TEST STRING",dogname+"added");
 
 
                 }
                 CustomAdapter adapter= new CustomAdapter(getActivity(), names);
                 listView.setAdapter(adapter);
+
+               // breedCalculator();
 
             }
 
@@ -112,6 +118,8 @@ public class DogList extends Fragment  {
             }
         });
     }
+
+
 
 
 }
