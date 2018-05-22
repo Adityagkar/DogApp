@@ -24,6 +24,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -55,6 +57,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class SignUp extends AppCompatActivity  {
 
@@ -64,6 +67,7 @@ public class SignUp extends AppCompatActivity  {
     Button camButton, next_btn;
     ImageView imageView;
     Uri uri;
+    boolean newflag=true;
 
     String mylocation;
     UserInfoDatabase userInfoDatabase;
@@ -111,6 +115,7 @@ public class SignUp extends AppCompatActivity  {
 
 
 
+
         //submit values to DB on click of submit button
         next_btn.setVisibility(View.VISIBLE);
 
@@ -119,11 +124,19 @@ public class SignUp extends AppCompatActivity  {
             public void onClick(View view) {
 
                 userid_retrieved=databaseReference.child("signup_details").push().getKey();
+
                 //databaseReference.child(userid_retrieved).setValue(a);
 
                 Log.d("KEYFINAL",userid_retrieved);
-                onImageUploadToFirebase();
+              //  onImageUploadToFirebase();
+                String username_temp=username.getText().toString();
+                boolean b =   retrieve(username_temp);
+                Log.e("!!!!!!",""+b);
+                if(!b)
+                {
 
+
+                }
             }
         });
 
@@ -149,14 +162,13 @@ public class SignUp extends AppCompatActivity  {
 
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.DONUT)
 
 
     public void onImageUploadToFirebase(){
+//
+       if(uri!=null){
 
-        if(uri!=null){
-            //Toast.makeText(this,uri+"",Toast.LENGTH_SHORT).show();
 
             StorageReference storageReference2nd = storageReference.child("upload/" + System.currentTimeMillis() + "." + GetFileExtension(uri));
 
@@ -179,13 +191,6 @@ public class SignUp extends AppCompatActivity  {
                             ,TempImageName,taskSnapshot.getDownloadUrl().toString());
 
                 //code for username checking
-                            String username_temp=username.getText().toString();
-                            Query queryref=databaseReference.child("signup_details").orderByChild("username").equalTo(username_temp);
-                           if(queryref!=null){
-
-                           }
-
-
 
 
                              //Adding image upload id s child element into databaseReference.
@@ -216,21 +221,77 @@ public class SignUp extends AppCompatActivity  {
                     });
 
             Intent intent=new Intent(SignUp.this,PlacePickerActivity.class);
+
             startActivity(intent);
-            userInfoDatabase=new UserInfoDatabase(name.getText().toString(),userid_retrieved);
-
-
+             userInfoDatabase = new UserInfoDatabase(username.getText().toString(), userid_retrieved);
         }
         else {
 
-            Snackbar snackbar = Snackbar
-                    .make(linear, "Please Upload an image !", Snackbar.LENGTH_LONG);
-            snackbar.show();
 
-        }
+
+                Snackbar snackbar = Snackbar
+                        .make(linear, "Please Upload an image !", Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }
+
 
 
     }
+
+    boolean flag=true;
+
+    private boolean retrieve(final String username_temp) {
+                flag = true;
+                DatabaseReference databaseReference2=firebaseDatabase.getReference();
+
+//        final String username_u=mEmailView.getText().toString();
+//        final String password_u=mPasswordView.getText().toString();
+            // Log.d("TEST","VAlue found !");
+            Query query= databaseReference2.child("signup_details").orderByChild("username").equalTo(username_temp);
+            Log.d("TEST",username_temp);
+
+
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @RequiresApi(api = Build.VERSION_CODES.DONUT)
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+                    {
+
+                        Log.d("TEST!!!!","VAlue found !");
+
+                        Map<String,Object> map= (Map<String, Object>) dataSnapshot1.getValue();
+                        String username_r=map.get("username").toString();
+
+                        if(username_r.equals(username_temp)){
+                            flag = false;
+
+                        }
+                        Log.d("TEST",""+username_r+" "+username_r+"out");
+
+                    }
+
+                    if(!flag)
+                    {
+                        Snackbar snackbar = Snackbar.make(linear, "This Username is already taken!", Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    }
+                    else
+                        onImageUploadToFirebase();
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d("TEST","Inside functn");
+
+                }
+            });
+
+
+            return flag;
+    }
+
     public String GetFileExtension(Uri uri) {
 
         ContentResolver contentResolver = getContentResolver();

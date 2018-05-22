@@ -104,7 +104,7 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/rounded2"
                 android:elevation="20dp"
-                android:hint="email "
+                android:hint="username "
                 android:imeActionId="6"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"

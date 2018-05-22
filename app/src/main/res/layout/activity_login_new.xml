@@ -61,7 +61,7 @@
                         android:layout_marginRight="40dp"
                         android:background="@drawable/rounded"
                         android:elevation="20dp"
-                        android:hint="     email "
+                        android:hint="   username "
                         android:inputType="text"
                         android:maxLines="1"
                         android:paddingLeft="4dp"

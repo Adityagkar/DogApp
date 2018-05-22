@@ -36,6 +36,6 @@
         android:fontFamily="@font/acme"
         android:text="emailaddress@email.com"
         android:textColor="@color/colorPrimary"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
 
 </RelativeLayout>

@@ -49,7 +49,7 @@ public class AboutDog extends AppCompatActivity {
     UserInfoDatabase userInfoDatabase;
     String dogid_retrieved;
     String userid_retrieved;
-
+    String username;
     ImageView imageView;
     Uri uri;
 
@@ -88,6 +88,7 @@ public class AboutDog extends AppCompatActivity {
         times--;
         Log.d("TEST",times+"");
         CID_retrieved= userInfoDatabase.getUserID();
+        username=userInfoDatabase.getUsername();
         userid_retrieved=CID_retrieved;
         Log.d("KEYFINAL",CID_retrieved);
 
@@ -177,7 +178,7 @@ public class AboutDog extends AppCompatActivity {
 
                             //String dogname,String dog_breed,String dog_age,String CID,String imagename, String url
                             @SuppressWarnings("VisibleForTests")
-                            DogInfoDatabase imageUploadInfo = new DogInfoDatabase(name.getText().toString(),breed.getText().toString(),age.getText().toString(),userid_retrieved,TempImageName,taskSnapshot.getDownloadUrl().toString());
+                            DogInfoDatabase imageUploadInfo = new DogInfoDatabase(name.getText().toString(),breed.getText().toString(),age.getText().toString(),userid_retrieved,TempImageName,taskSnapshot.getDownloadUrl().toString(),username);
 
 
                             //Adding image upload id s child element into databaseReference.

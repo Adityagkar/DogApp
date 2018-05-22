@@ -436,12 +436,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     Map<String,Object> map= (Map<String, Object>) dataSnapshot1.getValue();
                     String username_r=map.get("username").toString();
+                    String user_id=map.get("name").toString();
                     String password_r=map.get("password").toString();
 
                    // Log.d("TEST",""+username_r+" "+password_r);
 
                    if(username_r.equals(username_u) && password_r.equals(password_u) )
                     {
+                        UserInfoDatabase userInfoDatabase=new UserInfoDatabase(username_r,user_id);
 
                             Log.d("TEST","VAlue found !");
                         flag=true;
