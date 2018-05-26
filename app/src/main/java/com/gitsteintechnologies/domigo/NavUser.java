@@ -27,6 +27,14 @@ public class NavUser extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        android.support.v4.app.Fragment fragment= new Home();
+                ft.replace(R.id.content_frame,fragment);
+        ft.commit();
+
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);

@@ -16,6 +16,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
+import java.util.Random;
 
 public class ForgotActivity extends AppCompatActivity {
     EditText input;
@@ -30,6 +31,7 @@ public class ForgotActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot);
 
+
         firebaseDatabase=FirebaseDatabase.getInstance();
         databaseReference=firebaseDatabase.getReference();
 
@@ -41,6 +43,7 @@ public class ForgotActivity extends AppCompatActivity {
 
         switch (count){
             case 1:// user finally changes password
+
 
             case 2: // users enters passcode and it gets verfied
 

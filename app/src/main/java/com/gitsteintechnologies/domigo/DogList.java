@@ -35,7 +35,25 @@ public class DogList extends Fragment  {
     DatabaseReference databaseReference;
     List<String> names;
     List<String> breed;
+    CustomAdapter adapter;
         ListView listView;
+      String noOfDays;
+        long price=0;
+    long totalprice=0;
+
+    public String getNoOfDays() {
+        return noOfDays;
+    }
+
+    public void setNoOfDays(String noOfDays) {
+        this.noOfDays = noOfDays;
+    }
+
+    public DogList(){
+
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -47,15 +65,42 @@ public class DogList extends Fragment  {
         breed=new ArrayList<String>();
         listView=  v.findViewById(R.id.listView);
 
+        noOfDays=getNoOfDays();
+        Log.d("DAYS",getNoOfDays()+"dl");
+
 
         Button next= v.findViewById(R.id.button13);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+//                CustomAdapter adapter= new CustomAdapter(getActivity(), names);
+//                adapter.setNoOfDays(noOfDays);
+//                               ArrayList arrayListfetched=adapter.retrieve("");
+//
+//                for (int i=0;i<arrayListfetched.size();i++){
+//
+//                    Log.d("DBB",arrayListfetched.get(i).toString());
+//                    if(arrayListfetched.get(i).toString().contains("small")){
+//                        Log.d("DB","yes");
+//                        price=priceCalculator("small",450);
+//                    }else if((arrayListfetched.get(i).toString()).contains("medium")){
+//                        price=priceCalculator("small",500);
+//                    }else if((arrayListfetched.get(i).toString()).contains("large")){
+//                        price=priceCalculator("small",600);
+//                    }else if((arrayListfetched.get(i).toString()).contains("indies")){
+//                        price=priceCalculator("small",350);
+//                    }
+//                totalprice=totalprice+price;
+//                }
+//
+//                Log.d("PRICE",totalprice+"");
 
                 Fragment fragment;
-                fragment = new FinalBooking();
+                long price=adapter.tillnowtotalPrice();
+                FinalBooking finalBooking=new FinalBooking();
+                fragment = finalBooking;
+                finalBooking.setPriceFinal(price);
                 replaceFragment(fragment);
             }
         });
@@ -64,6 +109,21 @@ public class DogList extends Fragment  {
 
 
         return v;
+    }
+
+    private long priceCalculator(String breed,int rate) {
+
+    int days=10;
+
+        if(days<10){
+            price=days*rate;
+        }else if(days<20 && days>=10){
+            price=days*(rate-50);
+        }else if(days>=20){
+            price=days*(rate-100);
+        }
+        Log.d("PRICE",price+"in");
+      return price;
     }
 
     @Override
@@ -105,7 +165,9 @@ public class DogList extends Fragment  {
 
 
                 }
-                CustomAdapter adapter= new CustomAdapter(getActivity(), names);
+                 adapter= new CustomAdapter(getActivity(), names);
+                adapter.setNoOfDays(noOfDays);
+
                 listView.setAdapter(adapter);
 
                // breedCalculator();

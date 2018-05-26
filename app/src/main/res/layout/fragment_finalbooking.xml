@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/planback"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -22,62 +23,72 @@
             android:layout_centerInParent="false"
             android:layout_marginTop="164dp"
             android:fontFamily="@font/acme"
+            android:text="Thanks for the Booking !"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="24sp"
-            android:visibility="visible"
-            tools:text="Thanks for the Booking !" />
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/textView39"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/imageView11"
+            android:layout_below="@+id/textView36"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="false"
             android:fontFamily="@font/acme"
+            android:text="Your Total Bill is "
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="24sp"
-            android:visibility="visible"
-            tools:text="is Total Bill! " />
+            android:visibility="visible" />
 
-        <TextView
-            android:id="@+id/textView40"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/listnew"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/textView39"
-            android:layout_alignEnd="@+id/textView36"
-            android:layout_alignRight="@+id/textView36"
-            android:layout_centerInParent="false"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:fontFamily="@font/acme"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            android:textColor="@color/colorPrimary"
-            android:textSize="80sp"
-            android:visibility="visible"
-            tools:text="0000" />
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/imageView11"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/textView36"
-            android:layout_marginEnd="7dp"
-            android:layout_marginRight="7dp"
-            android:layout_marginTop="14dp"
-            android:layout_toLeftOf="@+id/textView40"
-            android:layout_toStartOf="@+id/textView40"
-            app:srcCompat="@drawable/rupeesymbol" />
+            <ImageView
+                android:id="@+id/imageView11"
+                android:layout_width="50dp"
+                android:layout_height="100dp"
+                android:layout_alignTop="@+id/textView36"
+                android:layout_marginEnd="7dp"
+                android:layout_marginRight="7dp"
+                android:layout_marginTop="14dp"
+                android:layout_toLeftOf="@+id/textView40"
+                android:layout_toStartOf="@+id/textView40"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/rupeesymbol" />
+
+            <TextView
+                android:id="@+id/textView40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/textView39"
+                android:layout_alignEnd="@+id/textView36"
+                android:layout_alignRight="@+id/textView36"
+                android:layout_centerInParent="false"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/acme"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/colorPrimary"
+                android:textSize="70sp"
+                android:visibility="visible"
+                tools:text="0000" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_alignTop="@+id/camera_btn"
-            android:layout_below="@+id/textView39"
+            android:layout_below="@+id/listnew"
             android:orientation="vertical">
 
             <Button
