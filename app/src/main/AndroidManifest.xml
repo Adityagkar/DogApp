@@ -70,7 +70,8 @@
         <activity
             android:name=".NavUser"
             android:label="@string/title_activity_nav_user"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:hardwareAccelerated="true"
+                        android:theme="@style/AppTheme.NoActionBar">
 
 
         </activity>

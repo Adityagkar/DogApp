@@ -11,7 +11,7 @@ import android.view.ViewGroup;
  * Created by Aditya on 5/10/2018.
  */
 
-public class SmallBreed extends Fragment {
+public class SmallBreed extends android.app.Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

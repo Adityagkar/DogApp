@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ import java.util.Map;
  * Created by Aditya on 5/17/2018.
  */
 
-public class DogList extends Fragment  {
+public class DogList extends android.app.Fragment {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     List<String> names;
@@ -39,7 +40,10 @@ public class DogList extends Fragment  {
         ListView listView;
       String noOfDays;
         long price=0;
-    long totalprice=0;
+
+    Bundle bundle2;
+    Bundle bundle;
+    String bookid_retrieved;
 
     public String getNoOfDays() {
         return noOfDays;
@@ -58,8 +62,8 @@ public class DogList extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
       final View v  =inflater.inflate(R.layout.fragment_list,container,false);
-        firebaseDatabase=FirebaseDatabase.getInstance();
-        databaseReference=firebaseDatabase.getReference();
+
+
 
         names= new ArrayList<String>();
         breed=new ArrayList<String>();
@@ -67,38 +71,42 @@ public class DogList extends Fragment  {
 
         noOfDays=getNoOfDays();
         Log.d("DAYS",getNoOfDays()+"dl");
+        bundle=getArguments();
+        firebaseDatabase=FirebaseDatabase.getInstance();
+        databaseReference=firebaseDatabase.getReference();
+
+
+
 
 
         Button next= v.findViewById(R.id.button13);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                bundle2=new Bundle();
+                bundle2.putString("fromDate",bundle.getString("fromDate"));
+                bundle2.putString("toDate",bundle.getString("toDate"));
+                bundle2.putString("cid",bundle.getString("cid") );
+                bundle2.putString("name",bundle.getString("name"));
+                bundle2.putSerializable("ARRAYLIST",(Serializable)names);
 
-//                CustomAdapter adapter= new CustomAdapter(getActivity(), names);
-//                adapter.setNoOfDays(noOfDays);
-//                               ArrayList arrayListfetched=adapter.retrieve("");
 //
-//                for (int i=0;i<arrayListfetched.size();i++){
-//
-//                    Log.d("DBB",arrayListfetched.get(i).toString());
-//                    if(arrayListfetched.get(i).toString().contains("small")){
-//                        Log.d("DB","yes");
-//                        price=priceCalculator("small",450);
-//                    }else if((arrayListfetched.get(i).toString()).contains("medium")){
-//                        price=priceCalculator("small",500);
-//                    }else if((arrayListfetched.get(i).toString()).contains("large")){
-//                        price=priceCalculator("small",600);
-//                    }else if((arrayListfetched.get(i).toString()).contains("indies")){
-//                        price=priceCalculator("small",350);
-//                    }
-//                totalprice=totalprice+price;
-//                }
-//
-//                Log.d("PRICE",totalprice+"");
+                for (int i=0;i<names.size();i++){
+                  //  BookingInfoDatabase bookingInfoDatabase=
+                           // new BookingInfoDatabase(bundle.getString("cid"),bundle.getString("name"),names.get(i).toString(),
+                            //        "0","1",bundle.getString("fromDate"),bundle.getString("toDate"),"0" );
+                   // addToDatabse(bookingInfoDatabase);
+                Log.d("TESTER",names.get(i).toString());
 
-                Fragment fragment;
+                }
+
+//
+
+                android.app.Fragment fragment;
                 long price=adapter.tillnowtotalPrice();
+
                 FinalBooking finalBooking=new FinalBooking();
+                finalBooking.setArguments(bundle2);
                 fragment = finalBooking;
                 finalBooking.setPriceFinal(price);
                 replaceFragment(fragment);
@@ -109,6 +117,17 @@ public class DogList extends Fragment  {
 
 
         return v;
+    }
+
+    private boolean addToDatabse(BookingInfoDatabase bookingInfoDatabase) {
+
+
+        bookid_retrieved=databaseReference.child("booking_details").push().getKey();
+
+
+        databaseReference.child(bookid_retrieved).setValue(bookingInfoDatabase);
+
+        return true;
     }
 
     private long priceCalculator(String breed,int rate) {
@@ -131,17 +150,19 @@ public class DogList extends Fragment  {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Booking");
         UserInfoDatabase userInfoDatabase=new UserInfoDatabase();
+
         retrieve(userInfoDatabase.getUsername().toString());
     }
 
 
-    public void replaceFragment(android.support.v4.app.Fragment someFragment) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+    public void replaceFragment(android.app.Fragment someFragment) {
+        android.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.content_frame, someFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
     public void retrieve(final String username_u){
+
 
         Query query= databaseReference.child("dog_details").orderByChild("username").equalTo(username_u);
 
@@ -167,6 +188,7 @@ public class DogList extends Fragment  {
                 }
                  adapter= new CustomAdapter(getActivity(), names);
                 adapter.setNoOfDays(noOfDays);
+                names=adapter.fetcher();
 
                 listView.setAdapter(adapter);
 
@@ -179,6 +201,11 @@ public class DogList extends Fragment  {
 
             }
         });
+
+
+    }
+    public ArrayList fetcher_list(){
+        return (ArrayList) names;
     }
 
 

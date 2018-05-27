@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -15,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
 
 public class NavUser extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -29,9 +31,8 @@ public class NavUser extends AppCompatActivity
 
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        android.support.v4.app.Fragment fragment= new Home();
-                ft.replace(R.id.content_frame,fragment);
-        ft.commit();
+        Fragment fragment= new Home();
+         replaceFragment(fragment);
 
 
 
@@ -98,12 +99,13 @@ public class NavUser extends AppCompatActivity
     private void displaySelectedScreen(int id) {
 
         //creating fragment object
-        android.support.v4.app.Fragment fragment = null;
+        Fragment fragment=null;
 
         //initializing the fragment object which is selected
         if (id == R.id.nav_home) {
             // Handle the camera action
-            fragment=new Home();
+
+          fragment=new Home();
         } else if (id == R.id.nav_booking) {
             fragment=new MenuBooking();
 
@@ -112,13 +114,18 @@ public class NavUser extends AppCompatActivity
         }
         //replacing the fragment
         if (fragment != null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.content_frame,fragment);
-            ft.commit();
+            replaceFragment(fragment);
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+    public void replaceFragment(Fragment someFragment) {
+        android.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, someFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
 

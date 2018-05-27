@@ -92,7 +92,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/booknow"
+                android:id="@+id/summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
@@ -108,7 +108,7 @@
 
 
             <Button
-                android:id="@+id/viewplans"
+                android:id="@+id/paynow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
@@ -123,7 +123,7 @@
                 android:textSize="18sp" />
 
             <Button
-                android:id="@+id/viewplans3"
+                android:id="@+id/paylater"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
